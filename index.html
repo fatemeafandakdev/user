@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body >
+   
+    
+    <div class="container  ">
+
+        
+        <div class="row mt-5 position-relative  prime ">
+
+            <div id="map" style="width:300px;height:200px" >
+              
+            
+           </div>
+            
+       
+                <div class="position-absolute add-modal  rounded rounded-1 col-4 " >
+                    <h5>افزودن</h5>
+                   <div class="d-flex flex-column  add-modal2" >
+                    <div class="d-flex justify-content-between m-2">
+                        <label>نام</label> <input type="text" id="name" class="addinput">
+                    </div>
+                    <div class="d-flex justify-content-between m-2">
+                        <label>نام خانوادگی</label> <input type="text"  id="lastname" class="addinput">
+                    </div>
+                   
+                    <div class="d-flex justify-content-between m-2">
+                        <label>کدملی</label> <input type="number" id="code" class="addinput">
+                    </div>
+                    <div class="d-flex m-2  ">
+                        <button class="btn btns mx-1 " onclick="add(this)">افزودن</button>
+                        <button class="btn btns" onclick="closes()">بستن</button>
+                    </div>
+                    <span class=" text-danger alerts ">لطفا همه ی اطلاعات را تکمیل کنید</span>
+                </div>
+                </div>
+           
+            <div class="col-9  m-auto  border-1 my-3 searchbox position-relative  ">
+                <div class=" row justify-content-around   p-2   ">
+                    <div class="col-3 " >
+                        <label>نام</label> <input type="text" class="inputs " id="searchname">
+                        </div>
+                   
+                  <div class="col-3">
+                    <label >نام خانوادگی</label> <input type="text" class="inputs" id="searchlastname">
+                  </div>
+                  <div class="col-3">
+                    <label >کد ملی</label> <input type="number" class="inputs" id="searchcode">
+                  </div>
+                  
+                   <button onclick="filters()" class="col-1 btns">جستجو</button>
+                </div>
+                <div class="searchresult">
+                    <button type="button" class="close " aria-label="Close" onclick="closesearchs()">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                <div class="searchresult2 ">
+                   
+                </div>
+            </div>
+            </div>
+<div class="col-8   m-auto d-flex justify-content-center  ">
+    
+    <table class=" m-auto table table-bordered  roanded table-striped " id="members">
+        <thead class="table-primary fw-bold  ">
+            <td>ردیف</td>
+            <td>نام</td>
+            <td>نام خانوادگی</td>
+            <td>کدملی</td>
+            <td class="text-center">عملیات</td>
+          </thead>
+        
+      </table>
+      <div class="m-3" onclick="openaddMember()">
+        <img src="./img/add-user (1).png" alt="" width="30" >
+      </div>
+</div>
+        </div>
+    </div>
+    <div class="parentchart">
+        <h5 class="px-2"  onclick="closechart()">بستن</h5>
+        <canvas id="myChart" style="width:90%; max-width:350px">
+    </div>
+    
+   
+    </canvas>
+    <script >
+        let table=document.getElementById("members")
+let modal=document.querySelector(".add-modal")
+//////////////////////////////////////////////
+let name=document.getElementById("name")
+let lastname=document.getElementById("lastname")
+let code=document.getElementById("code")
+let prime=document.querySelector(".prime")
+/////////////////////////////////////////////
+let membr=[]
+
+let latlng=[
+    {lat:34.639999	,lang:50.876389},
+    {lat:38.066666	,lang:46.299999},
+    {lat:27.183708	,lang:56.277447},
+    {lat:36.072098	,lang:49.701347},
+    {lat:35.855938	,lang:35.855938},
+    {lat:33.420223	,lang:49.696930},
+    {lat:38.489429	,lang:47.068359},
+    {lat:34.639999	,lang:50.876389},
+    {lat:31.318327	,lang:48.670620}
+]
+// let item={}
+function openaddMember(){
+modal.style.display="block"
+}
+
+ function closes(){
+    modal.style.display="none"
+ }
+ let alerts=document.querySelector('.alerts')
+function add(){
+
+
+
+if(name.value!="" && lastname.value!="" && code.value!="") {
+   
+    modal.style.display="none"
+    membr.push(
+        {names:name.value.trim(),lastname:lastname.value.trim(),code:code.value.trim()}
+       )
+       setTimeout(addmember,2)
+}else{
+
+    alerts.style.display="block"
+}
+
+console.log(membr)
+
+}
+
+function addmember(){
+    alerts.style.display="none"
+    
+   
+        let tr=document.createElement("tr")
+        tr.classList.add("tr")
+tr.classList.add(`${membr.length-1}`)
+        tr.innerHTML=`
+        
+        <td >${[membr.length]}</td>
+        <td class="fname">${membr[membr.length-1].names.trim()}</td>
+        <td class="lname">${membr[membr.length-1].lastname.trim()}</td>
+        <td class="lcode">${membr[membr.length-1].code.trim()}</td>
+        <td>
+          <div class="d-flex justify-content-around  ">
+              <img src="./img/eye.png" width="25" onclick=watchs(${membr.length-1})>
+              <img src="./img/edit.png" width="25" onclick=edit(${membr.length-1})>
+              <img src="./img/loction.png" width="25" onclick=myMap(${membr.length-1})>
+              <img src="./img/chart.png" width="25" onclick=chartmodals(${membr.length-1})>
+              <img src="./img/delete.png" width="25" onclick=deletes(${membr.length-1})>
+          </div>
+        </td>
+        `
+        table.appendChild(tr)
+  
+        name.value=null
+        lastname.value=null
+        code.value=null
+   
+        
+}
+
+function watchs(i){
+    let span=document.createElement("span")
+   
+    let watchmodal=document.createElement("div")
+    watchmodal.classList.add("watchmodal")
+    prime.appendChild(watchmodal)
+    prime.appendChild(span)
+    console.log(span)
+ watchmodal.innerHTML=
+    `
+   <h5 >مشاهده</h5>
+  <div class="watchmodal2">
+   <span>نام:<span> ${membr[i].names}</span></span>
+   <span> نام خانوادگی<span> ${membr[i].lastname}</span></span>
+   <span>کد ملی:<span> ${membr[i].code}</span></span>
+<button onclick=closewatchmodal() class="watchbtn">بستن</button>
+</div>
+    `
+    
+}
+
+function closewatchmodal(){
+    let watchmodal=document.querySelector(".watchmodal")
+    watchmodal.remove()
+    let span=document.querySelector(".span")
+    prime.removeChild(span)
+
+   
+}
+
+function deletes(i){
+let deletemodal=document.createElement("div")
+deletemodal.classList.add("deletemodal")
+deletemodal.innerHTML=`
+<h5>حذف</h5>
+<div class="deletemodal2">
+<p>?آیا رکورد حذف شود</p>
+<button onclick=deletemember(${i})>بله</button>
+<button onclick=closedeletemodal()>خیر</button>
+`
+prime.appendChild(deletemodal)
+
+}
+function closedeletemodal(){
+   
+   let deletemodal=document.querySelector(".deletemodal")
+   deletemodal.remove()
+}
+function deletemember(self){
+    let deletemodal=document.querySelector(".deletemodal")
+    let tr=document.querySelectorAll("tr")
+    
+    membr=membr.splice(self ,1)
+delete membr[self]
+tr.forEach((item)=>{
+    if(item.classList.contains(self)){
+        item.remove()
+    }
+}
+    
+)
+console.log(membr)
+   
+    deletemodal.remove()
+  
+}
+function edit(self){
+    let span=document.createElement("span")
+    span.classList.add("span")
+    prime.appendChild(span)
+    let editmodal=document.createElement("div")
+    editmodal.classList.add("editmodal")
+    prime.appendChild(editmodal)
+   
+    let fname=document.querySelector(".fname")
+    let   lname=document.querySelector(".lname")
+    let lcode=document.querySelector(".lcode")
+    editmodal.innerHTML=
+    `
+    <h5>ویرایش</h5>
+    <div class="editmodal2">
+    <div class="d-flex justify-content-between m-2 ">
+    <label>نام</label> <input type="text" id="editname" value=${fname.innerHTML}>
+</div>
+<div class="d-flex justify-content-between m-2">
+    <label>نام خانوادگی</label> <input type="text" id="editlastname" value=${lname.innerHTML}>
+</div>
+
+<div class="d-flex justify-content-between m-2">
+    <label>کدملی</label> <input type="number" id="editcode" value=${lcode.innerHTML}>
+</div>
+    <button onclick=editmembers(${self})> تایید</button>
+    <button onclick=closeeditmodal(${self})> بستن</button>
+    </div >
+    `
+    
+}
+
+function editmembers(self){
+   
+
+    let editmodal=document.querySelector(".editmodal")
+let editname=document.getElementById("editname")
+let editlastname=document.getElementById("editlastname")
+let editcode=document.getElementById("editcode")
+// 
+
+let fname=document.querySelector(".fname")
+let   lname=document.querySelector(".lname")
+let lcode=document.querySelector(".lcode")
+if(editname.value==""){
+    membr[self].names=fname.innerHTML
+}else{
+    fname.innerHTML=editname.value.trim()
+    membr[self].names=editname.value.trim()
+}
+if(editlastname.value==""){
+    membr[self].lastname=lname.innerHTML
+}else{
+    lname.innerHTML=editlastname.value.trim()
+    membr[self].lastname=editlastname.value.trim()
+}
+if(editcode.value==""){
+    membr[self].code=lcode.innerHTML
+}else{
+    lcode.innerHTML=editcode.value.trim()
+    membr[self].code=editcode.value.trim()
+}
+console.log(membr)
+editmodal.remove()
+let span=document.querySelector(".span")
+prime.removeChild(span)
+}
+function closeeditmodal(self){
+    let editmodal=document.querySelector(".editmodal")
+    editmodal.remove()
+    let span=document.querySelector(".span")
+    prime.removeChild(span)
+
+}
+
+let closecharts=document.querySelector(".parentchart")
+function chartmodals(i){
+    let span=document.createElement("span")
+    span.classList.add("span")
+    prime.appendChild(span)
+let chartmodal=document.createElement("div")
+chartmodal.classList.add("chartmodal")
+
+setTimeout(() => {
+    var xValues = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد"];
+var yValues = [  (i+10), 49, (30-i),45, (24+i)];
+var barColors = ["blue", "blue","blue","blue","blue"];
+
+new Chart("myChart", {
+  type: "bar",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: ` میانگین تعداد لاگین  ${membr[i].names} ${membr[i].lastname} در ماه ` 
+      
+    }
+  }
+});
+let myChart=document.getElementById("myChart")
+myChart.appendChild(chartmodal)
+closecharts.style.display="block"
+myChart.style.display="block"
+}, 1);
+
+
+}
+
+function closechart(){
+closecharts.style.display="none"
+let span=document.querySelector(".span")
+    prime.removeChild(span)
+}
+
+   
+ 
+let searchresult=document.querySelector(".searchresult2")
+let closesearch=document.querySelector(".close")
+    function filters(){
+        
+        searchresult.innerHTML=""
+        let searchname=document.getElementById("searchname")
+        let searchlastname=document.getElementById("searchlastname")
+        let searchcode=document.getElementById("searchcode")
+        let y
+       
+        if(searchname.value!=""&& searchlastname.value=="" && searchcode.value=="" ){
+            y=membr.filter(item=>item.names===searchname.value.trim() ) }
+           else if(searchname.value!="" && searchlastname.value!=""&& searchcode.value==""){
+                y=membr.filter(item=>item.names===searchname.value.trim() && item.lastname===searchlastname.value.trim()) }
+       else if(searchname.value!="" && searchlastname.value!=""&& searchcode.value!=""){
+            y=membr.filter(item=>item.names===searchname.value.trim() && item.lastname===searchlastname.value.trim() && item.code===searchcode.value.trim())
+        } else  if(searchname.value==""&& searchlastname.value!="" && searchcode.value=="" ){
+            y=membr.filter(item=>item.lastname===searchlastname.value.trim() )
+         }else  if(searchname.value==""&& searchlastname.value=="" && searchcode.value!="" ){
+            y=membr.filter(item=>item.code===searchcode.value.trim() ) 
+        }else if(searchname.value=="" && searchlastname.value!=""&& searchcode.value!=""){
+            y=membr.filter(item=>item.lastname===searchlastname.value.trim() && item.code===searchcode.value.trim())
+         }else if(searchname.value!="" && searchlastname.value==""&& searchcode.value!=""){
+            y=membr.filter(item=>item.names===searchname.value.trim() && item.code===searchcode.value.trim()) }
+       
+         
+       
+            y.forEach(item=>{
+               
+               searchresult.style.height="auto"
+               searchresult.style.padding="10px"
+               closesearch.style.display="block"
+             x=document.createElement("div")
+             x.classList.add("x")
+            
+            x.innerHTML=`
+            <span>نام: <span  class="bold"> ${item.names}</span></span >
+            <span>نام خانوادگی: <span  class="bold"> ${item.lastname}</span></span>
+            <span>کد ملی:<span class="bold">:${item.code}</span></span> 
+       `
+       searchresult.appendChild(x)
+       
+    
+        })
+        
+    }    
+ 
+    function closesearchs(){
+        let x=document.querySelectorAll(".x")
+         searchresult.style.height="0"
+         x.forEach(item=>{
+            item.remove()
+         })
+        
+         searchresult.style.padding="0px"
+               closesearch.style.display="none"
+    }
+    
+
+    // function myMap1(i){
+    //     let mapparent=document.querySelector(".mapparent")
+    //     mapparent.style.display="block"
+    // }
+    function myMap(i) {  
+    
+        var mapOptions = {  
+            center: new google.maps.LatLng(latlng[i].lat , latlng[i].lang),  
+            zoom: 10,  
+            mapTypeId: google.maps.MapTypeId.HYBRID  
+        }  
+        var map = new google.maps.Map(document.getElementById("map"), mapOptions);  
+        }  
+       
+        function closemap(){
+
+        }
+    </script>
+    <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+    </script>  
+   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBu-916DdpKAjTmJNIgngS6HL_kDIKU0aU&callback=myMap"></script>     
+   
+</body>
+</html>
