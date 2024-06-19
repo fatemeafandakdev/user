@@ -1,4 +1,4 @@
-[Demo project](https://fatemeafandakdev.github.io/use/)
+[Demo project](https://fatemeafandakdev.github.io/user/)
 
 Developed by Fateme Afandak
 
